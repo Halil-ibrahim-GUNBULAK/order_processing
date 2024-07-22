@@ -64,12 +64,69 @@ public class Main {
             }
 
 
+            try{
+                //Q2
+                // Post request example
+                String postResponse = postRequestExample("https://reqres.in/api/users", "{ \"name\": \"morpheus\", \"job\": \"leader\" }");
+                System.out.println("POST Response: " + postResponse);
 
+                // Get request example
+                String getResponse = getRequestExample("https://reqres.in/api/users/2");
+                System.out.println("GET Response: " + getResponse);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
         }
 
 
+
+    // Method to send a POST request
+    public static String postRequestExample(String urlString, String jsonInputString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json; utf-8");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setDoOutput(true);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("POST Response Code :: " + responseCode);
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
+    }
+    // Method to send a GET request
+    public static String getRequestExample(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("GET Response Code :: " + responseCode);
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
+    }
 
     }
 
